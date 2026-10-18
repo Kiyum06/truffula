@@ -20,6 +20,9 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 - ColorPrinterTest checks if the code works correctly.
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
+- TruffulaOptions stores the program settings.
+- It checks which folder the user wants to open.
+- TruffulaOptionsTest checks if the options work correctly.
 
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
 
