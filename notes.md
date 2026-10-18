@@ -15,6 +15,9 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 - getCode() returns the color code.
 
 ## ColorPrinter.java / ColorPrinterTest.java
+- ColorPrinter prints colored text.
+- We can choose different colors.
+- ColorPrinterTest checks if the code works correctly.
 
 ## TruffulaOptions.java / TruffulaOptionsTest.java
 
