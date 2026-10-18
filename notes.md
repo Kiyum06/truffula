@@ -10,6 +10,9 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 - The main() method is not implemented yet.
 
 ## ConsoleColor.java
+- This file stores different text colors.
+- It uses codes to show colors in the terminal.
+- getCode() returns the color code.
 
 ## ColorPrinter.java / ColorPrinterTest.java
 
