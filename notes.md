@@ -4,6 +4,10 @@ As part of Wave 0, please fill out notes for each of the below files. They are i
 PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 
 ## App.java
+- App.java is the starting point of the program.
+- The main() method runs when the program starts.
+- The program displays files and folders in a tree structure.
+- The main() method is not implemented yet.
 
 ## ConsoleColor.java
 
