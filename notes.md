@@ -25,5 +25,10 @@ PLEASE MAKE FREQUENT COMMITS AS YOU FILL OUT THIS FILE.
 - TruffulaOptionsTest checks if the options work correctly.
 
 ## TruffulaPrinter.java / TruffulaPrinterTest.java
+- TruffulaPrinter prints files and folders in a tree.
+- It uses spaces to show folder levels.
+- TruffulaPrinterTest checks if the tree prints correctly.
 
 ## AlphabeticalFileSorter.java
+- This file sorts files by their names.
+- It sorts files in alphabetical order.
