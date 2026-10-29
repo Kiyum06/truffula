@@ -115,9 +115,20 @@ public class TruffulaPrinter {
 
     File root = options.getRoot();
 
-    out.println(root.getName() + "/");
+    printWithColor(root.getName() + "/", 0);
 
     printFiles(root, 1);
+  }
+
+  private void printWithColor(String message, int level) {
+      if (options.isUseColor()) {
+          ConsoleColor color = colorSequence.get(level % colorSequence.size());
+          out.setCurrentColor(color);
+      } else {
+          out.setCurrentColor(ConsoleColor.WHITE);
+      }
+
+      out.println(message);
   }
 
   private void printFiles(File folder, int level) {
@@ -136,10 +147,11 @@ public class TruffulaPrinter {
           String spaces = "   ".repeat(level);
 
           if (file.isDirectory()) {
-              out.println(spaces + file.getName() + "/");
+              printWithColor(spaces + file.getName() + "/", level);
+
               printFiles(file, level + 1);
           } else {
-              out.println(spaces + file.getName());
+              printWithColor(spaces + file.getName(), level);
           }
       }
   }

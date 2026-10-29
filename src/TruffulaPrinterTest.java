@@ -307,4 +307,90 @@ void testVisibleFileShown(@TempDir File tempDir) throws IOException {
         assertFalse(output.toString().contains(".private"));
         assertFalse(output.toString().contains("secret.txt"));
     }
+
+    @Test
+    void testColorByLevel(@TempDir File tempDir) throws IOException {
+        File folder = new File(tempDir, "documents");
+        assertTrue(folder.mkdir());
+
+        File file = new File(folder, "notes.txt");
+        assertTrue(file.createNewFile());
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, true);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String nl = System.lineSeparator();
+
+        String expected =
+            ConsoleColor.WHITE + tempDir.getName() + "/" + nl + ConsoleColor.RESET
+            + ConsoleColor.PURPLE + "   documents/" + nl + ConsoleColor.RESET
+            + ConsoleColor.YELLOW + "      notes.txt" + nl + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
+
+    @Test
+    void testColorDisabled(@TempDir File tempDir) throws IOException {
+        File file = new File(tempDir, "hello.txt");
+        assertTrue(file.createNewFile());
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String nl = System.lineSeparator();
+
+        String expected =
+            ConsoleColor.WHITE + tempDir.getName() + "/" + nl + ConsoleColor.RESET
+            + ConsoleColor.WHITE + "   hello.txt" + nl + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
+
+    @Test
+    void testColorCycle(@TempDir File tempDir) {
+        File level1 = new File(tempDir, "folder1");
+        File level2 = new File(level1, "folder2");
+        File level3 = new File(level2, "folder3");
+
+        assertTrue(level1.mkdir());
+        assertTrue(level2.mkdir());
+        assertTrue(level3.mkdir());
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, true);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String nl = System.lineSeparator();
+
+        String expected =
+            ConsoleColor.WHITE + tempDir.getName() + "/" + nl + ConsoleColor.RESET
+            + ConsoleColor.PURPLE + "   folder1/" + nl + ConsoleColor.RESET
+            + ConsoleColor.YELLOW + "      folder2/" + nl + ConsoleColor.RESET
+            + ConsoleColor.WHITE + "         folder3/" + nl + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
 }
