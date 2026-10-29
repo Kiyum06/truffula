@@ -149,4 +149,80 @@ public class TruffulaPrinterTest {
         // Assert that the output matches the expected output exactly
         assertEquals(expected.toString(), output);
     }
+
+    @Test
+    void testEmptyDirectory(@TempDir File tempDir) {
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String expected = ConsoleColor.WHITE
+            + tempDir.getName() + "/"
+            + System.lineSeparator()
+            + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
+
+    @Test
+    void testOneFile(@TempDir File tempDir) throws IOException {
+        File file = new File(tempDir, "hello.txt");
+        file.createNewFile();
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String expected =
+            ConsoleColor.WHITE + tempDir.getName() + "/"
+            + System.lineSeparator() + ConsoleColor.RESET
+            + ConsoleColor.WHITE + "   hello.txt"
+            + System.lineSeparator() + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
+
+    @Test
+    void testNestedDirectory(@TempDir File tempDir) throws IOException {
+        File folder = new File(tempDir, "documents");
+        folder.mkdir();
+
+        File file = new File(folder, "notes.txt");
+        file.createNewFile();
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String expected =
+            ConsoleColor.WHITE + tempDir.getName() + "/"
+            + System.lineSeparator() + ConsoleColor.RESET
+            + ConsoleColor.WHITE + "   documents/"
+            + System.lineSeparator() + ConsoleColor.RESET
+            + ConsoleColor.WHITE + "      notes.txt"
+            + System.lineSeparator() + ConsoleColor.RESET;
+
+        assertEquals(expected, output.toString());
+    }
 }
