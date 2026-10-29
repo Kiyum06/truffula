@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -224,5 +225,86 @@ public class TruffulaPrinterTest {
             + System.lineSeparator() + ConsoleColor.RESET;
 
         assertEquals(expected, output.toString());
+    }
+
+    @Test
+void testHiddenFileNotShown(@TempDir File tempDir) throws IOException {
+    createHiddenFile(tempDir, ".secret.txt");
+
+    TruffulaOptions options =
+        new TruffulaOptions(tempDir, false, false);
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(output);
+
+    TruffulaPrinter printer =
+        new TruffulaPrinter(options, printStream);
+
+    printer.printTree();
+
+    assertFalse(output.toString().contains(".secret.txt"));
+}
+
+@Test
+void testHiddenFileShown(@TempDir File tempDir) throws IOException {
+    createHiddenFile(tempDir, ".secret.txt");
+
+    TruffulaOptions options =
+        new TruffulaOptions(tempDir, true, false);
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(output);
+
+    TruffulaPrinter printer =
+        new TruffulaPrinter(options, printStream);
+
+    printer.printTree();
+
+    assertTrue(output.toString().contains(".secret.txt"));
+}
+
+@Test
+void testVisibleFileShown(@TempDir File tempDir) throws IOException {
+    File file = new File(tempDir, "hello.txt");
+    file.createNewFile();
+
+    createHiddenFile(tempDir, ".secret.txt");
+
+    TruffulaOptions options =
+        new TruffulaOptions(tempDir, false, false);
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    PrintStream printStream = new PrintStream(output);
+
+    TruffulaPrinter printer =
+        new TruffulaPrinter(options, printStream);
+
+    printer.printTree();
+
+    assertTrue(output.toString().contains("hello.txt"));
+    assertFalse(output.toString().contains(".secret.txt"));
+}
+
+    @Test
+    void testHiddenFolderNotShown(@TempDir File tempDir) throws IOException {
+        File hiddenFolder = new File(tempDir, ".private");
+        assertTrue(hiddenFolder.mkdir());
+
+        File file = new File(hiddenFolder, "secret.txt");
+        assertTrue(file.createNewFile());
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        assertFalse(output.toString().contains(".private"));
+        assertFalse(output.toString().contains("secret.txt"));
     }
 }

@@ -129,11 +129,14 @@ public class TruffulaPrinter {
 
       for (File file : files) {
 
+          if (!options.isShowHidden() && file.isHidden()) {
+              continue;
+          }
+
           String spaces = "   ".repeat(level);
 
           if (file.isDirectory()) {
               out.println(spaces + file.getName() + "/");
-
               printFiles(file, level + 1);
           } else {
               out.println(spaces + file.getName());
