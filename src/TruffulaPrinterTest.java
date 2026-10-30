@@ -393,4 +393,57 @@ void testVisibleFileShown(@TempDir File tempDir) throws IOException {
 
         assertEquals(expected, output.toString());
     }
+
+
+    @Test
+    void testAlphabeticalOrder(@TempDir File tempDir) throws IOException {
+        new File(tempDir, "zebra.txt").createNewFile();
+        new File(tempDir, "banana.txt").createNewFile();
+        new File(tempDir, "Apple.txt").createNewFile();
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String result = output.toString();
+
+        assertTrue(result.indexOf("Apple.txt") < result.indexOf("banana.txt"));
+        assertTrue(result.indexOf("banana.txt") < result.indexOf("zebra.txt"));
+    }
+
+
+    @Test
+    void testNestedAlphabeticalOrder(@TempDir File tempDir) throws IOException {
+        File folder = new File(tempDir, "documents");
+        assertTrue(folder.mkdir());
+
+        new File(folder, "zebra.txt").createNewFile();
+        new File(folder, "apple.txt").createNewFile();
+        new File(folder, "banana.txt").createNewFile();
+
+        TruffulaOptions options =
+            new TruffulaOptions(tempDir, false, false);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(output);
+
+        TruffulaPrinter printer =
+            new TruffulaPrinter(options, printStream);
+
+        printer.printTree();
+
+        String result = output.toString();
+
+        assertTrue(result.indexOf("apple.txt") < result.indexOf("banana.txt"));
+        assertTrue(result.indexOf("banana.txt") < result.indexOf("zebra.txt"));
+    }
+
+    
 }

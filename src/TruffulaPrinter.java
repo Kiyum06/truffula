@@ -132,27 +132,29 @@ public class TruffulaPrinter {
   }
 
   private void printFiles(File folder, int level) {
-      File[] files = folder.listFiles();
+    File[] files = folder.listFiles();
 
-      if (files == null) {
-          return;
-      }
+    if (files == null) {
+        return;
+    }
 
-      for (File file : files) {
+    // Sort files alphabetically
+    files = AlphabeticalFileSorter.sort(files);
 
-          if (!options.isShowHidden() && file.isHidden()) {
-              continue;
-          }
+    for (File file : files) {
 
-          String spaces = "   ".repeat(level);
+        if (!options.isShowHidden() && file.isHidden()) {
+            continue;
+        }
 
-          if (file.isDirectory()) {
-              printWithColor(spaces + file.getName() + "/", level);
+        String spaces = "   ".repeat(level);
 
-              printFiles(file, level + 1);
-          } else {
-              printWithColor(spaces + file.getName(), level);
-          }
-      }
+        if (file.isDirectory()) {
+            printWithColor(spaces + file.getName() + "/", level);
+            printFiles(file, level + 1);
+        } else {
+            printWithColor(spaces + file.getName(), level);
+        }
+    }
   }
 }
